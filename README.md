@@ -1,5 +1,5 @@
 With the Metro Publisher Plugin for Adobe Lightroom you dramatically reduce the amount of time it takes to upload images to a Metro Publisher Site
-as all image captions, photographers credits, and stored in Metro Publisher. You can also automatically add slideshow Articles in Metro Publisher,
+as all image captions, photographers credits are automatically stored in Metro Publisher. You can also automatically add slideshow Articles in Metro Publisher,
 that allow you to easiliy publish your images on a Metro Publisher Site.
 
 Installation
