@@ -116,7 +116,7 @@ function MetroPublisherUploadExportDialog.sectionsForTopOfDialog( _, propertyTab
                     f:row {
                         f:static_text {
                             title = LOC "$$$/MetroPublisher/ExportDialog/MPTitle=Metro Publisher Lightroom Plugin V 1.1",
-                            size = 'big',
+                            size = '<system/bold>',
                             alignment = 'right',
                         },
                     },
