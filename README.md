@@ -8,6 +8,7 @@ Installation:
 - Extract the downloaded zip file.
 - Launch Adobe Lightroom.
 - In Lightroom go to File -> Plug-in Manager.
-- On the left side click the Add Button this will reveal your hard drive. Find the folder you extracted the zipfile to.
+- The Plug-in Manager window will pop up.
+- On the bottom left side click the Add Button this will reveal your hard drive. Find the folder you extracted the zipfile to.
 - Select the file "mp.lrplugin" and the plugin is installed.
  
