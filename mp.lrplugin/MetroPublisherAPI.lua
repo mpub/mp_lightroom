@@ -162,6 +162,8 @@ function MetroPublisherAPI.addArticle()
 
     -- generate new article uuid
     local uuid = lrUuid.generateUUID()
+    -- and the slot uuid
+    local slot_uuid = string.lower(lrUuid.generateUUID())
     
     -- first we add the article with some metadata
     local url = string.format('https://api.metropublisher.com/%s/content/%s', prefs.instance_id, uuid)
@@ -181,7 +183,9 @@ function MetroPublisherAPI.addArticle()
     end
 
     if prefs.content and prefs.content ~= '' then
-        metadata_table.content = '<p>' .. prefs.content .. '</p>'
+        metadata_table.content = '<slot id="' .. slot_uuid .. '" /><p>' .. prefs.content .. '</p>'
+    else
+        metadata_table.content = '<slot id="' .. slot_uuid .. '" />'    
     end
 
     if prefs.publish then
@@ -196,12 +200,31 @@ function MetroPublisherAPI.addArticle()
     -- Parse MetroPublisher response to see if the article was added correctly.    
     local json_resp = json.decode(response)
     MetroPublisherAPI.checkMetroPublisherResponse(json_resp)
-    return uuid
+    
+    -- now we add the slot to the article        
+    url = string.format('https://api.metropublisher.com/%s/content/%s/slots/%s', prefs.instance_id, uuid, slot_uuid)
+    headers = MetroPublisherAPI.makeAuthHeader('application/json') 
+
+    metadata_table = {}
+    metadata_table.relevance = prefs.relevance
+    if prefs.relevance == 'inline' then
+        metadata_table.display = prefs.display
+    end
+
+    local data = json.encode(metadata_table)
+    
+    local response, hdrs = LrHttp.post( url, data, headers, 'PUT')
+
+    -- Parse MetroPublisher response to see if the article was added correctly.    
+    json_resp = json.decode(response)
+    MetroPublisherAPI.checkMetroPublisherResponse(json_resp)
+    
+    return uuid, slot_uuid
 end
 
 --------------------------------------------------------------------------------
 
-function MetroPublisherAPI.addMedia( article_uuid, photos_added )
+function MetroPublisherAPI.addMedia( article_uuid, slot_uuid, photos_added )
     -- attach the images we have added before to the article we have added before
     local image_data_table = {}
     local images = {}
@@ -223,7 +246,7 @@ function MetroPublisherAPI.addMedia( article_uuid, photos_added )
     image_data_table.items = images
     local images_data = json.encode(image_data_table)
 
-    local url = string.format('https://api.metropublisher.com/%s/content/%s/media', prefs.instance_id, article_uuid)
+    local url = string.format('https://api.metropublisher.com/%s/content/%s/slots/%s/media', prefs.instance_id, article_uuid, slot_uuid)
     local headers = MetroPublisherAPI.makeAuthHeader('application/json')
     local response, hdrs = LrHttp.post( url, images_data, headers, 'PUT' )    
     
