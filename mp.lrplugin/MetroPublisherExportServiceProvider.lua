@@ -22,6 +22,8 @@ exportServiceProvider.exportPresetFields = {
     { key = 'add_article', default = false },
     { key = 'article_title', default = "" },
     { key = 'urlname', default = "" },
+    { key = 'relevance', default = "" },
+    { key = 'display', default = "" },
     { key = 'publish', default = true },
     { key = 'open_in_browser', default = true },
     { key = 'section_uuid', default = "" },
@@ -68,7 +70,7 @@ function exportServiceProvider.processRenderedPhotos( functionContext, exportCon
     MetroPublisherAPI.getAuthToken()
     
     if exportSettings.add_article then
-        article_uuid = MetroPublisherAPI.addArticle()
+        article_uuid, slot_uuid = MetroPublisherAPI.addArticle()
     end
 
     for _, rendition in exportContext:renditions{ stopIfCanceled = true } do
@@ -106,7 +108,7 @@ function exportServiceProvider.processRenderedPhotos( functionContext, exportCon
     end
 
     if exportSettings.add_article then
-        MetroPublisherAPI.addMedia( article_uuid, photos_added )
+        MetroPublisherAPI.addMedia( article_uuid, slot_uuid, photos_added )
         LrDialogs.message(LOC "$$$/MetroPublisher/ExportDialog/ArticleSuccess=Article successfully created.")
         if exportSettings.open_in_browser then
             MetroPublisherAPI.showArticle( article_uuid )
