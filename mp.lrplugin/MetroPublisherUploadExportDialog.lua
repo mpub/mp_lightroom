@@ -9,6 +9,7 @@ Export dialog customization for Lightroom MetroPublisher uploader
 local LrView = import 'LrView'
 local LrDialogs = import 'LrDialogs'
 local LrFunctionContext = import 'LrFunctionContext'
+local LrBinding = import "LrBinding"
 
     -- MetroPublisher plug-in
 require 'MetroPublisherAPI'
@@ -56,6 +57,8 @@ function MetroPublisherUploadExportDialog.startDialog( propertyTable )
     propertyTable.add_article = false
     propertyTable.article_title = ''
     propertyTable.urlname = ''
+    propertyTable.relevance = 'inline'
+    propertyTable.display = 'carousel'
     propertyTable.publish = true
     propertyTable.open_in_browser = true
     propertyTable.section_uuid  = ''
@@ -115,7 +118,7 @@ function MetroPublisherUploadExportDialog.sectionsForTopOfDialog( _, propertyTab
                 f:column {
                     f:row {
                         f:static_text {
-                            title = LOC "$$$/MetroPublisher/ExportDialog/MPTitle=Metro Publisher Lightroom Plugin V 1.2",
+                            title = LOC "$$$/MetroPublisher/ExportDialog/MPTitle=Metro Publisher Lightroom Plugin V 1.3",
                             font = '<system/bold>',
                             alignment = 'right',
                         },
@@ -234,6 +237,72 @@ function MetroPublisherUploadExportDialog.sectionsForTopOfDialog( _, propertyTab
                 f:checkbox {
                     value = bind 'open_in_browser',
                     enabled = bind 'add_article',
+                },
+            },
+
+            f:row {
+                f:static_text {
+                    title = LOC "$$$/MetroPublisher/ExportDialog/Position=Position",
+                    enabled = bind 'add_article',
+                    alignment = 'right',
+                    width = share 'labelWidth'
+                },
+                f:radio_button {
+                    enabled = bind 'add_article',
+                    title = "Full Width",
+                    value = bind 'relevance', 
+                    checked_value = 'inline',
+                }, 
+                f:radio_button {
+                    enabled = bind 'add_article',
+                    title = "Aside",
+                    value = bind 'relevance',
+                    checked_value = 'aside',
+                },
+            },
+
+            f:row {
+                f:static_text {
+                    title = LOC "$$$/MetroPublisher/ExportDialog/Display=Display",
+                    enabled = bind {
+                        keys = { 'add_article', 'relevance' },
+                        operation = function( binder, values, fromTable )
+                            if fromTable then
+                                return (values.add_article and values.relevance == 'inline')
+                            end
+                            return LrBinding.kUnsupportedDirection
+                        end 
+                    },
+                    alignment = 'right',
+                    width = share 'labelWidth'
+                },
+                f:radio_button {
+                    enabled = bind {
+                        keys = { 'add_article', 'relevance' },
+                        operation = function( binder, values, fromTable )
+                            if fromTable then
+                                return (values.add_article and values.relevance == 'inline')
+                            end
+                            return LrBinding.kUnsupportedDirection
+                        end 
+                    },
+                    title = "Carousel",
+                    value = bind 'display', 
+                    checked_value = 'carousel',
+                }, 
+                f:radio_button {
+                    enabled = bind {
+                        keys = { 'add_article', 'relevance' },
+                        operation = function( binder, values, fromTable )
+                            if fromTable then
+                                return (values.add_article and values.relevance == 'inline')
+                            end
+                            return LrBinding.kUnsupportedDirection
+                        end 
+                    },
+                    title = "Gallery",
+                    value = bind 'display',
+                    checked_value = 'gallery',
                 },
             },
 
