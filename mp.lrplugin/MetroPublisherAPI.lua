@@ -28,12 +28,20 @@ logger:enable('print')
 MetroPublisherAPI = {}
 
 --------------------------------------------------------------------------------
+
 function MetroPublisherAPI.getIssuedDate()
     -- append Z to indicate that we are sending utc datetime
     local date = LrDate.currentTime()
-    local w3c_date = LrDate.timeToW3CDate( date )
-    local utc_date = string.format('%sZ', w3c_date)
-    return utc_date
+
+    tz, ds = LrDate.timeZone()
+    if ds then
+        date = date - tz - 3600
+    else
+        date = date - tz
+    end
+
+    date = LrDate.timeToUserFormat( date, "%Y-%m-%dT%H:%M:%SZ" )
+    return date
 end
 
 function MetroPublisherAPI.getAuthToken()

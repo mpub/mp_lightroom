@@ -1,6 +1,6 @@
 return {
 
-    LrSdkVersion = 4.0,
+    LrSdkVersion = 4.1,
 
     LrToolkitIdentifier = 'com.adobe.lightroom.export.metropublisher',
     LrPluginName = 'MetroPublisher',
