@@ -59,7 +59,7 @@ function MetroPublisherAPI.getAuthToken()
     })
     
     logger:info( 'MetroPublisher response:', response)
-    local json_resp = json.decode(response)
+    local json_resp = json.decode(tostring(response))
     prefs.access_token = json_resp.access_token
     return json_resp
 end
@@ -138,7 +138,7 @@ function MetroPublisherAPI.uploadPhoto( filename, filetype, title, description, 
     
     local data = json.encode(metadata_table)
     local response, hdrs = LrHttp.post( url, data, headers, 'PUT')
-    local json_resp = json.decode(response)
+    local json_resp = json.decode(tostring(response))
     MetroPublisherAPI.checkMetroPublisherResponse(json_resp)
     
     
@@ -151,7 +151,7 @@ function MetroPublisherAPI.uploadPhoto( filename, filetype, title, description, 
         
     -- Parse MetroPublisher response for photo ID.
     
-    local json_resp = json.decode(response)
+    local json_resp = json.decode(tostring(response))
     MetroPublisherAPI.checkMetroPublisherResponse(json_resp)
     local resp_table = {}
     resp_table.uuid = json_resp.uuid
@@ -206,7 +206,7 @@ function MetroPublisherAPI.addArticle()
     local response, hdrs = LrHttp.post( url, data, headers, 'PUT')
 
     -- Parse MetroPublisher response to see if the article was added correctly.    
-    local json_resp = json.decode(response)
+    local json_resp = json.decode(tostring(response))
     MetroPublisherAPI.checkMetroPublisherResponse(json_resp)
     
     -- now we add the slot to the article        
@@ -224,7 +224,7 @@ function MetroPublisherAPI.addArticle()
     local response, hdrs = LrHttp.post( url, data, headers, 'PUT')
 
     -- Parse MetroPublisher response to see if the article was added correctly.    
-    json_resp = json.decode(response)
+    json_resp = json.decode(tostring(response))
     MetroPublisherAPI.checkMetroPublisherResponse(json_resp)
     
     return uuid, slot_uuid
@@ -258,7 +258,7 @@ function MetroPublisherAPI.addMedia( article_uuid, slot_uuid, photos_added )
     local headers = MetroPublisherAPI.makeAuthHeader('application/json')
     local response, hdrs = LrHttp.post( url, images_data, headers, 'PUT' )    
     
-    local json_resp = json.decode(response)
+    local json_resp = json.decode(tostring(response))
     MetroPublisherAPI.checkMetroPublisherResponse(json_resp)
 end
 
@@ -310,7 +310,7 @@ function MetroPublisherAPI.getSections()
         local response, hdrs = LrHttp.get( url, headers)
     
         -- Parse MetroPublisher response to get the sections.    
-        local json_resp = json.decode(response)
+        local json_resp = json.decode(tostring(response))
         MetroPublisherAPI.checkMetroPublisherResponse(json_resp)
         for i, v in ipairs(json_resp.items) do
             table.insert(section_data, { title = v[1], uuid = v[2], parentid = v[3] })
@@ -333,7 +333,7 @@ function MetroPublisherAPI.showArticle( article_uuid )
     local headers = MetroPublisherAPI.makeAuthHeader()
     local url = string.format('https://api.metropublisher.com/%s/content/%s/info', prefs.instance_id, article_uuid)
     local response, hdrs = LrHttp.get( url, headers)
-    local json_resp = json.decode(response)
+    local json_resp = json.decode(tostring(response))
     MetroPublisherAPI.checkMetroPublisherResponse(json_resp)
     local public_url = json_resp.public_url
     LrHttp.openUrlInBrowser( public_url )
