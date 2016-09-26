@@ -60,6 +60,9 @@ function MetroPublisherAPI.getAuthToken()
     
     logger:info( 'MetroPublisher response:', response)
     local json_resp = json.decode(tostring(response))
+    if not json_resp then
+        LrErrors.throwUserError( LOC( "$$$/Flickr/Error/API/Upload=No response from the MetroPublisher API please check your internet connection and try again later."))
+    end
     prefs.access_token = json_resp.access_token
     return json_resp
 end
